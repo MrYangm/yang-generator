@@ -27,8 +27,10 @@ public class FreeMarkerTest {
         // 设置模板文件的字符集
         configuration.setDefaultEncoding("UTF-8");
 
-        // 创建模板对象, 加载指定模板
+        // 设置数字格式化
+        configuration.setNumberFormat("0.###");
 
+        // 创建模板对象, 加载指定模板
         Template template = configuration.getTemplate("myweb.html.ftl");
 
         // 创建数据模型
@@ -36,10 +38,14 @@ public class FreeMarkerTest {
         dataModel.put("currentYear", "2025");
         // 创建 List 集合,用于存放菜单项
         List<Map<String, Object>> menuItems = new ArrayList<>();
-        Map<String, Object> menuItem1 = new HashMap<>();
-        menuItem1.put("url", "https://www.baidu.com");
-        menuItem1.put("label", "百度");
+        Map<String, Object> menuItem1= new HashMap<>();
+        menuItem1.put("label", "DeepSeek");
+        menuItem1.put("url", "https://ai.com");
         menuItems.add(menuItem1);
+        Map<String, Object> menuItem2= new HashMap<>();
+        menuItem2.put("label", "OpenAI");
+        menuItem2.put("url", "https://www.openai.com");
+        menuItems.add(menuItem2);
         dataModel.put("menuItems", menuItems);
 
         // 生成
