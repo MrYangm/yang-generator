@@ -40,7 +40,7 @@ public class StaticGenerator {
         File outputFile = new File(outputPath);
         try {
             copyFilesByRecursive(inputFile, outputFile);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("文件复制失败");
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class StaticGenerator {
         if (inputFile.isDirectory()) {
             System.out.println(inputFile.getName());
             File destOutputFile = new File(outputFile, inputFile.getName());
-            // 如果是目录，创建目录
+            // 如果是目录，首先创建目录
             if (!destOutputFile.exists()) {
                 destOutputFile.mkdirs();
             }
@@ -66,16 +66,15 @@ public class StaticGenerator {
             }
             for (File file : files) {
                 // 递归拷贝下一层文件
-                copyFilesByRecursive(file, outputFile);
+                copyFilesByRecursive(file, destOutputFile);
             }
-        }else {
+        } else {
             // 是文件, 直接复制到目标目录下
             Path destPath = outputFile.toPath().resolve(inputFile.getName());
             Files.copy(inputFile.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
         }
-        }
-
     }
+}
 
 
 
