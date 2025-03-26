@@ -1,4 +1,4 @@
-package com.yang.generator.dome.projects.acm.template;
+package com.yang.acm;
 
 import java.util.Scanner;
 
