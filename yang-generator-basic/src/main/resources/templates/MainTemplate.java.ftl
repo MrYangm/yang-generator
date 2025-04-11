@@ -11,7 +11,7 @@ public static void main(String[] args) {
 Scanner scanner = new Scanner(System.in);
 
 <#if loop >
-while (scanner.hasNext()) {
+    while (scanner.hasNext()) {
 </#if>
 
 
@@ -33,9 +33,9 @@ sum += num;
 
 System.out.println("${outputText}" + sum);
 <#if loop >
-}
+    }
 </#if>
 
 scanner.close();
-    }
+}
 }
