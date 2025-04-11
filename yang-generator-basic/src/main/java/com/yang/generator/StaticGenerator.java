@@ -13,10 +13,13 @@ public class StaticGenerator {
     public static void main(String[] args) {
         String projectPath = System.getProperty("user.dir");      // 获取当前项目路径
         System.out.println("当前项目路径：" + projectPath);
-        String inputPath = projectPath + File.separator + "Yang-generator-dome-projects" + File.separator + "acm-template";
+        String inputPath = projectPath + File.separator + "yang-generator-demo-projects" + File.separator + "acm-template";
+        System.out.printf("输入路径：%s\n", inputPath);
         String outputPath = projectPath;
-        //copyFilesByHutool(inputPath, outputPath);
-        copyFilesByRecursive(inputPath, outputPath);
+        System.out.printf("输出路径：%s\n", outputPath);
+
+        copyFilesByHutool(inputPath, outputPath);
+        //copyFilesByRecursive(inputPath, outputPath);
 
     }
 

@@ -23,7 +23,7 @@ public class DynamicGenerator {
        config.setAuthor("yang");
        config.setLoop(true);
        config.setOutputText("求和结果");
-       DoGenerator(inputPath, outputPath, config);
+       doGenerator(inputPath, outputPath, config);
     }
 
     /**
@@ -36,7 +36,7 @@ public class DynamicGenerator {
      * @throws TemplateException
      */
 
-    public static void DoGenerator(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
+    public static void doGenerator(String inputPath, String outputPath, Object model) throws IOException, TemplateException {
         // new出 Configuration对象, 参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 

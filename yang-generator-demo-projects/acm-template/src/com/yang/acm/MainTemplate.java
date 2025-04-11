@@ -1,4 +1,4 @@
-package com.yang.acm;
+package com.yupi.acm;
 
 import java.util.Scanner;
 
