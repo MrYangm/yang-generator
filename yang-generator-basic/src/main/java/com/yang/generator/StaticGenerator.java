@@ -18,7 +18,7 @@ import java.nio.file.StandardCopyOption;
 public class StaticGenerator {
 
     public static void main(String[] args) {
-        // 过去整个项目的根路径
+        // 获取整个项目的根路径
         String projectPath = System.getProperty("user.dir");
         File projectFile = new File(projectPath).getParentFile();
         //输入路径 ACM 示例代码模板目录
@@ -55,7 +55,7 @@ public class StaticGenerator {
      * 文件 A => 文件 B，则文件 A 覆盖文件 B
      * 目录 A => 目录 B，则目录 A 放在目录 B 下
      *
-     * 核心思路：先创建目录，然后遍历目录内的文件，依次复制
+     * 核心思路：先创建目录，然后遍历目录内的文件，依次复制1
      * @param inputFile
      * @param outputFile
      * @throws IOException
