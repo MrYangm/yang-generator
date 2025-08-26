@@ -81,9 +81,9 @@ public class DynamicGenerator {
 
         // 创建数据模型
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setAuthor("yupi");
+        mainTemplateConfig.setAuthor("yang");
         mainTemplateConfig.setLoop(false);
-        mainTemplateConfig.setOutputText("求和结果：");
+        //mainTemplateConfig.setOutputText("求和结果：");
 
         // 生成
         Writer out = new FileWriter(outputPath);
