@@ -1,0 +1,4 @@
+#!/bin/bash
+java -jar target/yang-generator-basic-1.0-SNAPSHOT-jar-with-dependencies.jar "$@"
+
+
