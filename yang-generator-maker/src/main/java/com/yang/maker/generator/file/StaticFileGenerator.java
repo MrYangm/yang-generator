@@ -1,4 +1,4 @@
-package com.yang.maker.generator;
+package com.yang.maker.generator.file;
 
 import cn.hutool.core.io.FileUtil;
 

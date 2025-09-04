@@ -1,4 +1,4 @@
-package com.yang.maker.generator;
+package com.yang.maker.generator.file;
 
 import com.yang.maker.model.DataModel;
 import freemarker.template.TemplateException;
