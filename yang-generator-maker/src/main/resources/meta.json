@@ -6,8 +6,9 @@
   "author": "yang",
   "createTime": "2025-08-30 17:00:00",
   "fileConfig": {
-    "inputRootPath": "/Users/yang/Desktop/Project/Java/yang-generator/yang-generator-demo-projects/acm-template-pro",
-    "outputRootPath": "generated",
+    "inputRootPath": ".source/acm-template-pro",
+    "outputRootPath": "/USers/yang/Desktop/Project/Java/yang-generator/acm-template-pro",
+    "sourceRootPath": "/Users/yang/Desktop/Project/Java/yang-generator/yang-generator-demo-projects/acm-template-pro",
     "type": "dir",
     "files": [
       {
