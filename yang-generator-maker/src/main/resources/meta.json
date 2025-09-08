@@ -7,27 +7,35 @@
   "createTime": "2025-08-30 17:00:00",
   "fileConfig": {
     "inputRootPath": ".source/acm-template-pro",
-    "outputRootPath": "/USers/yang/Desktop/Project/Java/yang-generator/acm-template-pro",
+    "outputRootPath": "/Users/yang/Desktop/Project/Java/yang-generator/acm-template-pro",
     "sourceRootPath": "/Users/yang/Desktop/Project/Java/yang-generator/yang-generator-demo-projects/acm-template-pro",
     "type": "dir",
     "files": [
+      {
+        "groupKey": "git",
+        "groupName": "开源",
+        "type": "group",
+        "condition": "needGit",
+        "files": [
+          {
+            "inputPath": ".gitignore",
+            "outputPath": ".gitignore",
+            "type": "file",
+            "generateType": "static"
+          },
+          {
+            "inputPath": "README.md",
+            "outputPath": "README.md",
+            "type": "file",
+            "generateType": "static"
+          }
+          ]
+      },
       {
         "inputPath": "src/com/yang/acm/MainTemplate.java.ftl",
         "outputPath": "src/com/yang/acm/MainTemplate.java",
         "type": "file",
         "generateType": "dynamic"
-      },
-      {
-        "inputPath": ".gitignore",
-        "outputPath": ".gitignore",
-        "type": "file",
-        "generateType": "static"
-      },
-      {
-        "inputPath": "README.md",
-        "outputPath": "README.md",
-        "type": "file",
-        "generateType": "static"
       }
     ]
   },
@@ -41,19 +49,35 @@
         "abbr": "l"
       },
       {
-        "fieldName": "author",
-        "type": "String",
-        "description": "作者注释",
-        "defaultValue": "yang",
-        "abbr": "a"
+        "groupKey": "mainTemplate",
+        "groupName": "核心模版",
+        "type": "MainTemplate",
+        "description": "用于生产核心模版文件",
+        "condition": "loop",
+        "models": [
+          {
+            "fieldName": "author",
+            "type": "String",
+
+            "description": "作者注释",
+            "defaultValue": "yang",
+            "abbr": "a"
+          },
+          {
+            "fieldName": "outputText",
+            "type": "String",
+            "description": "输出信息",
+            "defaultValue": "sum = ",
+            "abbr": "o"
+          }
+        ]
       },
-      {
-        "fieldName": "outputText",
-        "type": "String",
-        "description": "输出信息",
-        "defaultValue": "sum = ",
-        "abbr": "o"
-      }
+        {
+            "fieldName": "needGit",
+            "type": "boolean",
+            "description": "是否需要.gitignore 文件",
+            "defaultValue": true
+        }
     ]
   }
 }
