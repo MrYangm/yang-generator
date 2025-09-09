@@ -3,6 +3,7 @@
 .idea
 target
 generated
+.temp
 
 ### Java template
 # Compiled class file
