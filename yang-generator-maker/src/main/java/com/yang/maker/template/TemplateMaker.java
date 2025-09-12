@@ -9,6 +9,10 @@ import cn.hutool.json.JSONUtil;
 import com.yang.maker.meta.Meta;
 import com.yang.maker.meta.enums.FileGenerateTypeEnum;
 import com.yang.maker.meta.enums.FileTypeEnum;
+import com.yang.maker.template.enums.FileFilterRangeEnum;
+import com.yang.maker.template.enums.FileFilterRuleEnum;
+import com.yang.maker.template.model.FileFilterConfig;
+import com.yang.maker.template.model.TemplateMarkerFileConfig;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -24,13 +28,13 @@ public class TemplateMaker {
      *
      * @param newMeta
      * @param originProjectPath
-     * @param inputFilePathList
+     * @param templateMarkerFileConfig
      * @param modelInfo
      * @param searchStr
      * @param id
      * @return
      */
-    public static long makeTemplate(Meta newMeta, String originProjectPath, List<String> inputFilePathList, Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
+    public static long makeTemplate(Meta newMeta, String originProjectPath, TemplateMarkerFileConfig templateMarkerFileConfig, Meta.ModelConfig.ModelInfo modelInfo, String searchStr, Long id) {
         // 没有 id 则生成
         if (id == null) {
             id = IdUtil.getSnowflakeNextId();
@@ -53,24 +57,33 @@ public class TemplateMaker {
         String sourceRootPath = templatePath + File.separator + FileUtil.getLastPathEle(Paths.get(originProjectPath)).toString();
         // 注意 win 系统需要对路径进行转义
         sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
+        List<TemplateMarkerFileConfig.FileInfoConfig> fileInfoConfigList = templateMarkerFileConfig.getFiles();
 
         // 二、生成文件模板
         // 遍历输入文件
         List<Meta.FileConfig.FileInfo> newFileInfoList = new ArrayList<>();
-        for (String inputFilePath : inputFilePathList) {
-            String inputFileAbsolutePath = sourceRootPath + File.separator + inputFilePath;
-            // 输入的是目录
-            if (FileUtil.isDirectory(inputFileAbsolutePath)) {
-                List<File> fileList = FileUtil.loopFiles(inputFileAbsolutePath);
+        for (TemplateMarkerFileConfig.FileInfoConfig fileInfoConfig : fileInfoConfigList) {
+            String inputFilePath = fileInfoConfig.getPath();
+
+            // 如果填的是相对路径，则转换为绝对路径
+            if (!inputFilePath.startsWith(sourceRootPath)){
+                inputFilePath = sourceRootPath + File.separator + inputFilePath;
+            }
+
+            // 获取过滤后的文件列表 （不会存在目录）
+            List<File> fileList = FileFilter.doFilter(inputFilePath, fileInfoConfig.getFileFilterConfigList());
                 for (File file : fileList) {
                     Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(modelInfo, searchStr, sourceRootPath, file);
                     newFileInfoList.add(fileInfo);
                 }
-            } else {
-                // 输入的是文件
-                Meta.FileConfig.FileInfo fileInfo = makeFileTemplate(modelInfo, searchStr, sourceRootPath, new File(inputFileAbsolutePath));
-                newFileInfoList.add(fileInfo);
-            }
+        }
+
+        //如果是文件
+        TemplateMarkerFileConfig.FileGroupConfig fileGroupConfig = templateMarkerFileConfig.getFileGroupConfig();
+        if (fileGroupConfig != null) {
+            Meta.FileConfig.FileInfo groupFileInfo = getFileInfo(fileGroupConfig, newFileInfoList);
+            newFileInfoList = new ArrayList<>();
+            newFileInfoList.add(groupFileInfo);
         }
 
         // 三、生成配置文件
@@ -110,6 +123,29 @@ public class TemplateMaker {
         // 2. 输出元信息文件
         FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutputPath);
         return id;
+    }
+
+    /**
+     * 获取分组信息
+     * @param fileGroupConfig
+     * @param newFileInfoList
+     * @return
+     */
+
+    private static Meta.FileConfig.FileInfo getFileInfo(TemplateMarkerFileConfig.FileGroupConfig fileGroupConfig, List<Meta.FileConfig.FileInfo> newFileInfoList) {
+        String condition = fileGroupConfig.getCondition();
+        String groupKey = fileGroupConfig.getGroupKey();
+        String groupName = fileGroupConfig.getGroupName();
+
+        //新增分组配置
+        Meta.FileConfig.FileInfo groupFileInfo = new Meta.FileConfig.FileInfo();
+        groupFileInfo.setType(FileTypeEnum.GROUP.getValue());
+        groupFileInfo.setCondition(condition);
+        groupFileInfo.setGroupKey(groupKey);
+        groupFileInfo.setGroupName(groupName);
+        //文件放到一个分组内
+        groupFileInfo.setFiles(newFileInfoList);
+        return groupFileInfo;
     }
 
     /**
@@ -188,7 +224,32 @@ public class TemplateMaker {
         // 替换变量（第二次）
         String searchStr = "BaseResponse";
 
-        long id = makeTemplate(meta, originProjectPath, inputFilePathList, modelInfo, searchStr, 1966070190341087232L);
+        // 文件过滤配置
+        TemplateMarkerFileConfig templateMarkerFileConfig = new TemplateMarkerFileConfig();
+        TemplateMarkerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMarkerFileConfig.FileInfoConfig();
+        fileInfoConfig1.setPath(inputFilePath1);
+        List<FileFilterConfig> fileFilterConfigList = new ArrayList<>();
+        FileFilterConfig fileFilterConfig = FileFilterConfig.builder()
+                .range(FileFilterRangeEnum.FILE_NAME.getValue())
+                .ruler(FileFilterRuleEnum.CONTAINS.getValue())
+                .value("Base")
+                .build();
+        fileFilterConfigList.add(fileFilterConfig);
+        fileInfoConfig1.setFileFilterConfigList(fileFilterConfigList);
+
+        TemplateMarkerFileConfig.FileInfoConfig fileInfoConfig2 = new TemplateMarkerFileConfig.FileInfoConfig();
+        fileInfoConfig2.setPath(inputFilePath2);
+        templateMarkerFileConfig.setFiles(Arrays.asList(fileInfoConfig1, fileInfoConfig2));
+
+        // 分组配置
+        TemplateMarkerFileConfig.FileGroupConfig fileGroupConfig = new TemplateMarkerFileConfig.FileGroupConfig();
+        fileGroupConfig.setCondition("outputText");
+        fileGroupConfig.setGroupKey("text");
+        fileGroupConfig.setGroupName("测试分组");
+        templateMarkerFileConfig.setFileGroupConfig(fileGroupConfig);
+
+
+        long id = makeTemplate(meta, originProjectPath, templateMarkerFileConfig, modelInfo, searchStr, null);
         System.out.println(id);
     }
 
