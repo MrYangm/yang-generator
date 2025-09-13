@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-public class TemplateMarkerFileConfig {
+public class TemplateMakerFileConfig {
 
     private List<FileInfoConfig> files;
     private FileGroupConfig fileGroupConfig;
@@ -18,7 +18,7 @@ public class TemplateMarkerFileConfig {
 
         private String path;
 
-        private List<FileFilterConfig> fileFilterConfigList;
+        private List<FileFilterConfig> FilterConfigList;
     }
 
     @Data
